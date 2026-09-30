@@ -36,7 +36,7 @@ foreach ($orderData as $orderProIdKey => $orderQty) {
         }
     }
 }
-			}
+				}
 		
 			if(!isset($result) || !$result){
 				echo "<script> alert(\"You don't have enough stock to approve this order\"); </script>";
