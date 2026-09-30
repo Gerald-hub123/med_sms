@@ -17,23 +17,27 @@
 				$availProId['pro_id'] = $rowAvailQuantity['pro_id'];
 				$availQuantity['quantity'] = $rowAvailQuantity['quantity'];
 			}
-			while(($rowOrderQuantity = mysqli_fetch_array($resultOrderQuantity)){
-				$orderProId['pro_id'] = $rowOrderQuantity['pro_id']
+			while ($rowOrderQuantity = mysqli_fetch_array($resultOrderQuantity)) {
+    $orderProId[] = $rowOrderQuantity['pro_id'];
+    $orderQuantity[] = $rowOrderQuantity['quantity'];
+}
+
+$orderData = array_combine($orderProId, $orderQuantity);
+$availData = array_combine($availProId, $availQuantity);
+
+foreach ($orderData as $orderProIdKey => $orderQty) {
+    foreach ($availData as $availProIdKey => $availQty) {
+        if ($orderProIdKey == $availProIdKey) {
+            $total = $availQty - $orderQty;
+            if ($total >= 0) {
+                $queryUpdateQuantity = "UPDATE products SET quantity='$total' WHERE pro_id='$orderProIdKey'";
+                $result = mysqli_query($con, $queryUpdateQuantity);
+            }
+        }
+    }
+}
 			}
-				$orderQuantity['quantity'] = $rowOrderQuantity['quantity']
-			
-			foreach Generate(array_combine($orderProId, $orderQuantity) as $pro_Id => $quantity) {
-				foreach Generate(array_combine($availProId,$availQuantity) as $pro_Id => $quantity) {
-					if($pro_id == $proId) {
-						$total = $quantity-$quantity
-						if($total >= 0 ) {
-							$queryUpdateQuantity = "UPDATE products SET quantity='$total' WHERE pro_id='$proId'";
-							$result = mysqli_query($con,$queryUpdateQuantity);
-						}
-					}
-				}
-			}
-		}
+		
 			if(!isset($result) || !$result){
 				echo "<script> alert(\"You don't have enough stock to approve this order\"); </script>";
 				header("refresh:0;url=view_orders.php");
